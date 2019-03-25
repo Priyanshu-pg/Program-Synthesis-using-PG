@@ -1,13 +1,17 @@
 import numpy as np
 import random
 from utils import softmax
-
+import brainfuck
 
 chars = ['>', '<', '+', '-', '.', ',', '[', ']', '\n']
 vocab_size = len(chars)
 char_to_ix = {ch: i for i, ch in enumerate(sorted(chars))}
 ix_to_char = {i: ch for i, ch in enumerate(sorted(chars))}
 program_max_length = 500
+
+
+def char_to_ind():
+    return char_to_ix
 
 
 def clip(gradients, maxValue):
@@ -98,7 +102,7 @@ def sample(parameters, char_to_ix, seed):
     if counter == program_max_length:
         indices.append(char_to_ix['\n'])
 
-    return indices
+    return ''.join([ix_to_char[i] for i in indices])
 
 
 def init_parameters(hidden_state_size=100):
@@ -110,10 +114,12 @@ def init_parameters(hidden_state_size=100):
     parameters = {"Wax": Wax, "Waa": Waa, "Wya": Wya, "b": b, "by": by}
     return parameters
 
-
-# parameters = init_parameters()
-# indices = sample(parameters, char_to_ix, 0)
-# print("Sampling:")
-# print("list of sampled indices:", indices)
+# source_code = """>,[>+++++++[<------->-]<+[-<+>],]>-[+<[->+>+<<]>>[-<<+>>]<<<[->>>+>+<<<<]>>>>[-<<<<+>>>>]<[-[-[-[-[-[-[-[-[-[<<+<---------->>>[-]]]]]]]]]]]<<[->->+<<]>>[-<<+>>]<]<[>+++++++[<+++++++>-]<-.[-]]+++++++[<+++++++>-]<-."""
+#
+# brainfuck.evaluate(source_code)
+parameters = init_parameters()
+indices = sample(parameters, char_to_ix, 0)
+print("Sampling:")
+print("list of sampled indices:", indices)
 # print("list of sampled characters:", [ix_to_char[i] for i in indices])
 
