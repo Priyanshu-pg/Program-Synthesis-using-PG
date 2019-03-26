@@ -100,7 +100,7 @@ def buildbracemap(code):
       correct_syntax = False
   return bracemap, correct_syntax
 
-
+#TODO: timeout = 1
 def evaluate(code, input_buffer=None, init_memory=None, base=256, timeout=1.0,
              max_steps=None, require_correct_syntax=True, output_memory=False,
              debug=False):

@@ -1,14 +1,25 @@
 import RNN as rnn
 import reward as r
 
+LEARNING_RATE = 0.000025
+GAMMA = 0.99
 
 
-def update_param():
-    pass
+def calc_gradient_ascent(grads, rewards):
+    discounted_rewards = []
+    sum = 0
+    for t in range(len(rewards)):
+        Gt = 0
+        pw = 0
+        for r in rewards[t:]:
+            Gt = Gt + GAMMA ** pw * r
+            pw = pw + 1
+        discounted_rewards.append(Gt)
 
-
-def get_gradient(reward):
-    return None
+    for i in range(len(grads)):
+        # Loop through everything that happend in the episode and update towards the log policy gradient times **FUTURE** reward
+        sum += LEARNING_RATE * grads[i] * discounted_rewards[i]
+    return sum
 
 
 num_iterations = 500
@@ -17,11 +28,14 @@ task = None
 #initialize rnn
 parameters = rnn.init_parameters()
 for j in range(num_iterations):
-    code_string = rnn.sample(parameters, char_to_ix, j)
+    code_string, grads = rnn.sample(parameters, char_to_ix, j)
+    print("code : ", code_string)
+    # print("gradients : ", grads)
+    # code_string = "+[----->+++<]>+.---.+++++++..+++." # code for print-hello
     reward = r.get_reward(code_string)
     print(reward)
-    gradient = get_gradient(reward)
-    update_param()
+    gradient_ascent = calc_gradient_ascent(grads, reward.episode_rewards)
+    parameters = rnn.update_params(parameters, gradient_ascent)
 
     if j % 100 == 0:
         print('Iteration: %d' % (j) + '\n')

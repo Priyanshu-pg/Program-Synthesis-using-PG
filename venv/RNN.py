@@ -1,6 +1,6 @@
 import numpy as np
 import random
-from utils import softmax
+from utils import *
 import brainfuck
 
 chars = ['>', '<', '+', '-', '.', ',', '[', ']', '\n']
@@ -64,6 +64,7 @@ def sample(parameters, char_to_ix, seed):
 
     # Create an empty list of indices, this is the list which will contain the list of indices of the characters to generate (≈1 line)
     indices = []
+    grads = []
 
     # Idx is a flag to detect a newline character, we initialize it to -1
     idx = -1
@@ -88,6 +89,11 @@ def sample(parameters, char_to_ix, seed):
         # Append the index to "indices"
         indices.append(idx)
 
+        # Calculate likelihood ratio of policy: grad of log of softmax
+        # TODO: define state in our case, for now using wya as state
+        grad = softmax_likelihood_ratio(Wya, y, idx)
+        grads.append(grad)
+
         # Step 4: Overwrite the input character as the one corresponding to the sampled index.
         x = np.zeros((vocab_size, 1))
         x[idx] = 1
@@ -102,7 +108,7 @@ def sample(parameters, char_to_ix, seed):
     if counter == program_max_length:
         indices.append(char_to_ix['\n'])
 
-    return ''.join([ix_to_char[i] for i in indices])
+    return ''.join([ix_to_char[i] for i in indices]), grads
 
 
 def init_parameters(hidden_state_size=100):
@@ -111,6 +117,18 @@ def init_parameters(hidden_state_size=100):
     n_a = hidden_state_size
     Wax, Waa, Wya = np.random.randn(n_a, vocab_size), np.random.randn(n_a, n_a), np.random.randn(vocab_size, n_a)
     b, by = np.random.randn(n_a, 1), np.random.randn(vocab_size, 1)
+    parameters = {"Wax": Wax, "Waa": Waa, "Wya": Wya, "b": b, "by": by}
+    return parameters
+
+
+def update_params(parameters, gradient_ascent):
+    Waa, Wax, Wya, by, b = parameters['Waa'], parameters['Wax'], parameters['Wya'], parameters['by'], parameters['b']
+    Waa += gradient_ascent
+    Wax += gradient_ascent
+    Wya += gradient_ascent
+    by += gradient_ascent
+    b += gradient_ascent
+
     parameters = {"Wax": Wax, "Waa": Waa, "Wya": Wya, "b": b, "by": by}
     return parameters
 

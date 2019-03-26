@@ -1,4 +1,4 @@
-import  brainfuck as bf
+import brainfuck as bf
 from collections import namedtuple
 
 RewardInfo = namedtuple('RewardInfo', ['episode_rewards', 'input_case',
@@ -116,7 +116,7 @@ class PrintTask():
         if fixed_string:
             self.fixed_string = fixed_string
         else:
-            self.fixed_string = [1, 2, 3, 0]  # ABC<EOS>
+            self.fixed_string = [0, 1, 2, 27]  # ABC<EOS>
         self.min_length = self.max_length = len(self.fixed_string)
 
     def make_io_set(self):
@@ -136,8 +136,10 @@ def compute_best_reward(task, reward_fn, correct_bonus, code_length_bonus):
 
 
 def get_reward(code_string):
+
+    task = PrintTask(base=27, fixed_string=[7, 4, 11, 11, 14]) # print hello
+
     max_execution_steps = 5000
-    task = PrintTask(base=27, fixed_string=[8, 5, 12, 12, 15])
     require_correct_syntax = False
     io_seqs = task.make_io_set()
     terminal_reward = 0.0
@@ -161,7 +163,7 @@ def get_reward(code_string):
     reason = 'correct'
     for input_seq, output_seq in io_seqs:
       eval_result = bf.evaluate(
-          code_string, input_buffer=input_seq, timeout=0.1,
+          code_string[:-1], input_buffer=input_seq, timeout=0.1, #not send EOS to interpreter
           max_steps=max_execution_steps,
           base=task.base,
           require_correct_syntax=require_correct_syntax)
