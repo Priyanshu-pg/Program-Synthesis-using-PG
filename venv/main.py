@@ -29,15 +29,15 @@ task = None
 parameters = rnn.init_parameters()
 for j in range(num_iterations):
     code_string, grads = rnn.sample(parameters, char_to_ix, j)
-    print("code : ", code_string)
     # print("gradients : ", grads)
     # code_string = "+[----->+++<]>+.---.+++++++..+++." # code for print-hello
     reward = r.get_reward(code_string)
-    print(reward)
     gradient_ascent = calc_gradient_ascent(grads, reward.episode_rewards)
     parameters = rnn.update_params(parameters, gradient_ascent)
 
-    if j % 100 == 0:
+    if j % 200 == 0:
+        print("code : ", code_string)
+        print("Reward " + reward)
         print('Iteration: %d' % (j) + '\n')
         print(rnn.sample(parameters, char_to_ix, 0))
         print('\n')
