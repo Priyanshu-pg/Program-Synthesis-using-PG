@@ -38,6 +38,7 @@ for j in range(num_iterations):
     if j % 200 == 0:
         print("code : ", code_string)
         print(reward)
+        print(reward.correct_output, reward.code_output)
         print('Iteration: %d' % (j) + '\n')
         print(rnn.sample(parameters, char_to_ix, 0))
         print('\n')
