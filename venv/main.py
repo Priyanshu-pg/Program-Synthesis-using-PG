@@ -22,7 +22,7 @@ def calc_gradient_ascent(grads, rewards):
     return sum
 
 
-num_iterations = 500
+num_iterations = 500000
 char_to_ix = rnn.char_to_ind()
 task = None
 #initialize rnn
