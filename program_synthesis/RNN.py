@@ -38,7 +38,6 @@ def clip(gradients, maxValue):
 
 
 # GRADED FUNCTION: sample
-
 def sample(parameters, char_to_ix, seed):
     """
     Sample a sequence of characters according to a sequence of probability distributions output of the RNN
@@ -91,7 +90,7 @@ def sample(parameters, char_to_ix, seed):
 
         # Calculate likelihood ratio of policy: grad of log of softmax
         # TODO: define state in our case, for now using wya as state
-        grad = softmax_likelihood_ratio(Wya, y, idx)
+        grad = softmax_likelihood_ratio(x, y, idx)
         grads.append(grad)
 
         # Step 4: Overwrite the input character as the one corresponding to the sampled index.
@@ -132,9 +131,7 @@ def update_params(parameters, gradient_ascent):
     parameters = {"Wax": Wax, "Waa": Waa, "Wya": Wya, "b": b, "by": by}
     return parameters
 
-# source_code = """>,[>+++++++[<------->-]<+[-<+>],]>-[+<[->+>+<<]>>[-<<+>>]<<<[->>>+>+<<<<]>>>>[-<<<<+>>>>]<[-[-[-[-[-[-[-[-[-[<<+<---------->>>[-]]]]]]]]]]]<<[->->+<<]>>[-<<+>>]<]<[>+++++++[<+++++++>-]<-.[-]]+++++++[<+++++++>-]<-."""
-#
-# brainfuck.evaluate(source_code)
+
 parameters = init_parameters()
 indices = sample(parameters, char_to_ix, 0)
 print("Sampling:")
