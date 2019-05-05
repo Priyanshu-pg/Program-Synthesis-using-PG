@@ -25,12 +25,18 @@ for j in range(num_iterations):
     # TODO: convert string to array automatically
     expected_string = [0]
     reward = r.get_reward(code_string, expected_string)
-    print(reward)
+    if str(reward.reason) == 'correct':
+        print('Iteration: %d' % (j) + '\nCorrect Output: ' + str(reward.correct_output) + " Code Output: " + str(
+            reward.code_output) + " Reason: " + str(reward.reason))
+        print(lstm.sample(0))
+        print('\n')
+        break
     gradient_ascent = utils.calc_gradient_ascent(grads, reward.episode_rewards, GAMMA, LEARNING_RATE)
     lstm.update_params(gradient_ascent)
-
+    
     if j % 100 == 0:
-        print('Iteration: %d' % (j) + '\n')
+        print('Iteration: %d' % (j) + '\nCorrect Output: ' + str(reward.correct_output) + " Code Output: " + str(
+            reward.code_output) + " Reason: " + str(reward.reason))
         print(lstm.sample(0))
         print('\n')
 
