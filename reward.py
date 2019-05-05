@@ -135,9 +135,9 @@ def compute_best_reward(task, reward_fn, correct_bonus, code_length_bonus):
     # self.good_reward = 0.75 * reward
 
 
-def get_reward(code_string):
+def get_reward(code_string, expected_string):
 
-    task = PrintTask(base=27, fixed_string=[7, 4, 11, 11, 14]) # print hello
+    task = PrintTask(base=27, fixed_string=expected_string) # print hello
 
     max_execution_steps = 5000
     require_correct_syntax = False

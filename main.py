@@ -22,7 +22,9 @@ lstm = agent.lstm()
 
 for j in range(num_iterations):
     code_string, grads = lstm.sample(j)
-    reward = r.get_reward(code_string)
+    # TODO: convert string to array automatically
+    expected_string = [0]
+    reward = r.get_reward(code_string, expected_string)
     print(reward)
     gradient_ascent = utils.calc_gradient_ascent(grads, reward.episode_rewards, GAMMA, LEARNING_RATE)
     lstm.update_params(gradient_ascent)
